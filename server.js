@@ -28,6 +28,24 @@ app.get('/login', (req, res) => {
     });
 });
 
+app.post('/signin', (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    let name = req.body.name;
+    let hosu = req.body.hosu;
+    let apt_name = req.body.apt_name;
+    let role = req.body.role;
+    console.log(username + " " + password + " " + name + " " + hosu + " " + apt_name + " " + role);
+    connection.query(`INSERT INTO user_list (username, password, name, hosu, apt_name, role) VALUES (?,?,?,?,?,?)`, [username, password, name, hosu, apt_name, role], (error, results) => {
+        if (error) {
+            console.log('INSERT error');
+            console.log(error);
+            return;
+        }
+        return res.send(results);
+    });
+});
+
 const port = 80;
 app.listen(port, () => {
     console.log(`express server running on port ${port}`);
