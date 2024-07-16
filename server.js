@@ -39,13 +39,27 @@ app.post('/signin', (req, res) => {
     let apt_name = req.body.apt_name;
     let role = req.body.role;
     console.log(username + " " + password + " " + name + " " + hosu + " " + apt_name + " " + role);
-    connection.query(`INSERT INTO user_list (username, password, name, hosu, apt_name, role) VALUES (?,?,?,?,?,?)`, [username, password, name, hosu, apt_name, role], (error, results) => {
+    connection.query(`select username from where username = ?`, [username], (error, results) => {
         if (error) {
-            console.log('INSERT error');
+            console.log('select username');
             console.log(error);
             return;
         }
-        return res.send(results);
+        console.log(results[0])
+        if (results[0] != username) {
+            connection.query(`INSERT INTO user_list (username, password, name, hosu, apt_name, role) VALUES (?,?,?,?,?,?)`, [username, password, name, hosu, apt_name, role], (error, results) => {
+                if (error) {
+                    console.log('INSERT error');
+                    console.log(error);
+                    return res.status(500).send('안되지롱')
+                }
+                return res.status(200).send('회원가입 성공')
+            });
+        }
+        else
+        {
+            return res.status(500).send('중복된 아이디입니다')
+        }
     });
 });
 
