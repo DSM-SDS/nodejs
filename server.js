@@ -161,7 +161,7 @@ app.post('/report_list', authenticateAccessToken, (req, res) => {
                     console.log(error);
                     return res.status(500).send('안되지롱')
                 }
-                return res.json(results[0]);
+                return res.json(results);
             });
         }
     });
