@@ -195,8 +195,8 @@ app.post('/report_view', authenticateAccessToken, (req, res) => {
                         console.log(error);
                         return res.status(500).send('안되지롱')
                     }
-                    report_results[0].sensor_data = "None";
-                    Object.assign(report_results[0].sensor_data, sensor_results);
+                    report_results[0].sensor_data = sensor_results;
+                    // Object.assign(report_results[0].sensor_data, sensor_results);
                     return res.json(report_results[0]);
                 });
             });
