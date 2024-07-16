@@ -28,7 +28,7 @@ app.get('/login', (req, res) => {
     });
 });
 
-const port = 3000;
+const port = 80;
 app.listen(port, () => {
     console.log(`express server running on port ${port}`);
 });
