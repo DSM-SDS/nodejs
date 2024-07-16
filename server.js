@@ -227,7 +227,7 @@ app.post('/accept_report', authenticateAccessToken, (req, res) => {
     });
 });
 
-app.get('/get_data', (req, res) => {
+app.get('/put_data', (req, res) => {
     let hosu = req.query.hosu;
     let direction = req.query.direction;
     let avg = req.query.avg;
@@ -239,6 +239,19 @@ app.get('/get_data', (req, res) => {
             return res.status(500).send('안되지롱')
         }
         return res.status(200).send('Success')
+    });
+});
+
+app.get('/get_data', (req, res) => {
+    let hosu = req.query.hosu;
+    console.log(hosu);
+    connection.query(`select * from sensor_data where hosu = ?`, [hosu], (error, results) => {
+        if (error) {
+            console.log('INSERT error');
+            console.log(error);
+            return res.status(500).send('안되지롱')
+        }
+        return res.json(results);
     });
 });
 
