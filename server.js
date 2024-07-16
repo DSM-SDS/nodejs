@@ -173,6 +173,7 @@ app.post('/report_list', authenticateAccessToken, (req, res) => {
 
 app.post('/report_view', authenticateAccessToken, (req, res) => {
     let username = req.user.id;
+    let report_id = req.body.report_id;
     console.log(username);
     connection.query(`select role, apt_name from user_list where username = ?`, [username], (error, results) => {
         if (error) {
@@ -181,7 +182,7 @@ app.post('/report_view', authenticateAccessToken, (req, res) => {
             return;
         }
         if (results[0].role == "Admin") {
-            connection.query(`select report_id, title, name, date, time, detail from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
+            connection.query(`select report_id, title, name, date, time, detail from report where apt_name = ? and report_id = ?`, [results[0].apt_name, report_id], (error, results) => {
                 if (error) {
                     console.log('select error');
                     console.log(error);
