@@ -127,14 +127,21 @@ app.post('/report', authenticateAccessToken, (req, res) => {
     let detail = req.body.detail;
     let time = req.body.time;
     let date = req.body.date;
-    console.log(username);
-    connection.query(`INSERT INTO report (hosu, detail, time, date) VALUES (?,?,?,?)`, [hosu, detail, time, date], (error, results) => {
+    console.log(username + " " + hosu + " " + detail + " " + time + "" + date);
+    connection.query(`select apt_name,hosu from user_list where username = ?`, [username], (error, results) => {
         if (error) {
-            console.log('INSERT error');
+            console.log('select username');
             console.log(error);
-            return res.status(500).send('안되지롱')
+            return;
         }
-        return res.status(200).send('신고 접수')
+        connection.query(`INSERT INTO report (username, apt_name, hosu, detail, time, date, is_accepted) VALUES (?,?,?,?,?,?,?)`, [username, results[0].apt_name, results[0].hosu ,detail, time, date, "NO"], (error, results) => {
+            if (error) {
+                console.log('INSERT error');
+                console.log(error);
+                return res.status(500).send('안되지롱')
+            }
+            return res.status(200).send('신고 접수')
+        });
     });
 });
 
