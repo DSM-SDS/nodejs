@@ -4,6 +4,7 @@ const mysql = require('mysql');
 const cors = require('cors')
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -223,6 +224,21 @@ app.post('/accept_report', authenticateAccessToken, (req, res) => {
         {
             return res.status(500).send('해서 뭐하게')
         }
+    });
+});
+
+app.get('/get_data', (req, res) => {
+    let hosu = req.query.hosu;
+    let direction = req.query.direction;
+    let avg = req.query.avg;
+    console.log(hosu + "" + direction + "" + avg);
+    connection.query(`INSERT INTO sensor_data (time, hosu, direction, avg) VALUES (?,?,?,?)`, [moment().format(), hosu, direction, avg], (error, results) => {
+        if (error) {
+            console.log('INSERT error');
+            console.log(error);
+            return res.status(500).send('안되지롱')
+        }
+        return res.status(200)
     });
 });
 
