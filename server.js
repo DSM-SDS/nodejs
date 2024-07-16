@@ -42,7 +42,8 @@ app.post('/login', (req, res) => {
             return;
         }
         console.log(results[0])
-        if (results[0].hasOwnProperty('username')) {
+        const user_data = JSON.parse(results[0]);
+        if (user_data.hasOwnProperty('username')) {
             return res.status(200).send('로그인 성공')
         }
         else
