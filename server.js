@@ -164,6 +164,36 @@ app.post('/report_list', authenticateAccessToken, (req, res) => {
                 return res.json(results);
             });
         }
+        else
+        {
+            return res.status(500).send('봐서 뭐하게')
+        }
+    });
+});
+
+app.post('/report_view', authenticateAccessToken, (req, res) => {
+    let username = req.user.id;
+    console.log(username);
+    connection.query(`select role, apt_name from user_list where username = ?`, [username], (error, results) => {
+        if (error) {
+            console.log('select username');
+            console.log(error);
+            return;
+        }
+        if (results[0].role == "Admin") {
+            connection.query(`select report_id, title, name, date, time, detail from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
+                if (error) {
+                    console.log('select error');
+                    console.log(error);
+                    return res.status(500).send('안되지롱')
+                }
+                return res.json(results);
+            });
+        }
+        else
+        {
+            return res.status(500).send('봐서 뭐하게')
+        }
     });
 });
 
