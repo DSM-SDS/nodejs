@@ -176,20 +176,28 @@ app.post('/report_view', authenticateAccessToken, (req, res) => {
     let username = req.user.id;
     let report_id = req.body.report_id;
     console.log(username);
-    connection.query(`select role, apt_name from user_list where username = ?`, [username], (error, results) => {
+    connection.query(`select role, apt_name, hosu from user_list where username = ?`, [username], (error, results) => {
         if (error) {
             console.log('select username');
             console.log(error);
             return;
         }
         if (results[0].role == "Admin") {
-            connection.query(`select report_id, title, name, date, time, detail from report where apt_name = ? and report_id = ?`, [results[0].apt_name, report_id], (error, results) => {
+            connection.query(`select report_id, title, name, date, time, detail from report where apt_name = ? and report_id = ?`, [results[0].apt_name, report_id], (error, report_results) => {
                 if (error) {
                     console.log('select error');
                     console.log(error);
                     return res.status(500).send('안되지롱')
                 }
-                return res.json(results);
+                connection.query(`select * from sensor_data where hosu = ?`, [results[0].hosu], (error, sensor_results) => {
+                    if (error) {
+                        console.log('select error');
+                        console.log(error);
+                        return res.status(500).send('안되지롱')
+                    }
+                    Object.assign(report_results[0], sensor_results);
+                    return res.json(report_results[0]);
+                });
             });
         }
         else
