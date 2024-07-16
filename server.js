@@ -105,7 +105,7 @@ app.post('/signin', (req, res) => {
             return;
         }
         console.log(results[0])
-        if (results[0] == "") {
+        if (results[0] != "") {
             connection.query(`INSERT INTO user_list (username, password, name, hosu, apt_name, role) VALUES (?,?,?,?,?,?)`, [username, password, name, hosu, apt_name, role], (error, results) => {
                 if (error) {
                     console.log('INSERT error');
