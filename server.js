@@ -134,7 +134,7 @@ app.post('/report', authenticateAccessToken, (req, res) => {
             return;
         }
         console.log(results);
-        connection.query(`INSERT INTO report (username, name, apt_name, hosu, title, detail, time, date, is_accepted) VALUES (?,?,?,?,?,?,?,?)`, [username, results[0].name, results[0].apt_name, results[0].hosu, title, detail, time, date, "NO"], (error, results) => {
+        connection.query(`INSERT INTO report (username, name, apt_name, hosu, title, detail, time, date, is_accepted) VALUES (?,?,?,?,?,?,?,?,?)`, [username, results[0].name, results[0].apt_name, results[0].hosu, title, detail, time, date, "NO"], (error, results) => {
             if (error) {
                 console.log('INSERT error');
                 console.log(error);
