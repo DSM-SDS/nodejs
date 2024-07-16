@@ -7,6 +7,10 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const app = express();
 
+app.use(cors({
+    origin: '*',
+}));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -196,7 +200,6 @@ app.post('/report_view', authenticateAccessToken, (req, res) => {
                         return res.status(500).send('안되지롱')
                     }
                     report_results[0].sensor_data = sensor_results;
-                    // Object.assign(report_results[0].sensor_data, sensor_results);
                     return res.json(report_results[0]);
                 });
             });
