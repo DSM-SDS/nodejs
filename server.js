@@ -134,7 +134,7 @@ app.post('/report', authenticateAccessToken, (req, res) => {
             return;
         }
         console.log(results);
-        connection.query(`INSERT INTO report (username, apt_name, hosu, title, detail, time, date, c) VALUES (?,?,?,?,?,?,?,?)`, [username, results[0].apt_name, results[0].hosu, title, detail, time, date, "NO"], (error, results) => {
+        connection.query(`INSERT INTO report (username, apt_name, hosu, title, detail, time, date, is_accepted) VALUES (?,?,?,?,?,?,?,?)`, [username, results[0].apt_name, results[0].hosu, title, detail, time, date, "NO"], (error, results) => {
             if (error) {
                 console.log('INSERT error');
                 console.log(error);
@@ -155,7 +155,7 @@ app.post('/report_list', authenticateAccessToken, (req, res) => {
             return;
         }
         if (results[0].role = "Admin") {
-            connection.query(`select title, name, hosu, report, from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
+            connection.query(`select title, name, hosu, is_accepted from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
                 if (error) {
                     console.log('INSERT error');
                     console.log(error);
