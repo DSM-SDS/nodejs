@@ -3,6 +3,7 @@ const credential = require('./var.js');
 const mysql = require('mysql');
 const cors = require('cors')
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,6 +16,41 @@ const connection = mysql.createConnection({
     database: credential.mysql_db,
     timezone: "+09:00"
 });
+
+// access token을 secret key 기반으로 생성
+const generateAccessToken = (id) => {
+    return jwt.sign({ id }, credential.secret_key, {
+        expiresIn: "3 days",
+    });
+};
+
+// refersh token을 secret key  기반으로 생성
+const generateRefreshToken = (id) => {
+    return jwt.sign({ id }, credential.secret_key, {
+        expiresIn: "180 days",
+    });
+};
+
+// access token의 유효성 검사
+const authenticateAccessToken = (req, res, next) => {
+    let authHeader = req.headers["authorization"];
+    let token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        console.log("wrong token format or token is not sended");
+        return res.sendStatus(400);
+    }
+
+    jwt.verify(token, credential.secret_key, (error, user) => {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(403);
+        }
+
+        req.user = user;
+        next();
+    });
+};
 
 app.get('/', (req, res) => {
     return res.send("uhahaha");
@@ -43,7 +79,9 @@ app.post('/login', (req, res) => {
         }
         console.log(results[0])
         if (results != "") {
-            return res.status(200).send('로그인 성공')
+            let accessToken = generateAccessToken(results[0].username);
+            let refreshToken = generateRefreshToken(results[0].username);
+            res.json({ accessToken, refreshToken });
         }
         else
         {
@@ -81,6 +119,22 @@ app.post('/signin', (req, res) => {
         {
             return res.status(500).send('중복된 아이디입니다')
         }
+    });
+});
+
+app.post('/report', authenticateAccessToken, (req, res) => {
+    let username = req.user.id;
+    let detail = req.body.detail;
+    let time = req.body.time;
+    let date = req.body.date;
+    console.log(username + " " + hosu + " " + detail + " " + time + "" + date);
+    connection.query(`INSERT INTO report (hosu, detail, time, date) VALUES (?,?,?,?)`, [hosu, detail, time, date], (error, results) => {
+        if (error) {
+            console.log('INSERT error');
+            console.log(error);
+            return res.status(500).send('안되지롱')
+        }
+        return res.status(200).send('신고 접수')
     });
 });
 
