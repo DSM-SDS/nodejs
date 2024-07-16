@@ -5,6 +5,9 @@ const cors = require('cors')
 const bodyParser = require("body-parser");
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 const connection = mysql.createConnection({
     host: credential.mysql_host,
     user: credential.mysql_user,
