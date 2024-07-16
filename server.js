@@ -134,6 +134,7 @@ app.post('/report', authenticateAccessToken, (req, res) => {
             console.log(error);
             return;
         }
+        console.log(results);
         connection.query(`INSERT INTO report (username, apt_name, hosu, detail, time, date, is_accepted) VALUES (?,?,?,?,?,?,?)`, [username, results[0].apt_name, results[0].hosu ,detail, time, date, "NO"], (error, results) => {
             if (error) {
                 console.log('INSERT error');
