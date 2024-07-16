@@ -127,7 +127,7 @@ app.post('/report', authenticateAccessToken, (req, res) => {
     let detail = req.body.detail;
     let time = req.body.time;
     let date = req.body.date;
-    console.log(username + " " + hosu + " " + detail + " " + time + "" + date);
+    console.log(username);
     connection.query(`INSERT INTO report (hosu, detail, time, date) VALUES (?,?,?,?)`, [hosu, detail, time, date], (error, results) => {
         if (error) {
             console.log('INSERT error');
