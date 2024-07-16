@@ -155,9 +155,9 @@ app.post('/report_list', authenticateAccessToken, (req, res) => {
             return;
         }
         if (results[0].role = "Admin") {
-            connection.query(`select title, name, hosu, is_accepted from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
+            connection.query(`select report_id, title, name, hosu, is_accepted from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
                 if (error) {
-                    console.log('INSERT error');
+                    console.log('select error');
                     console.log(error);
                     return res.status(500).send('안되지롱')
                 }
