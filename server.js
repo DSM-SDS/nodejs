@@ -20,14 +20,35 @@ app.get('/', (req, res) => {
     return res.send("uhahaha");
 });
 
-app.get('/login', (req, res) => {
-    connection.query(`select * from user_list`, (error, results) => {
+// app.get('/login', (req, res) => {
+//     connection.query(`select * from user_list`, (error, results) => {
+//         if (error) {
+//             console.log('select * from user_list');
+//             console.log(error);
+//             return;
+//         }
+//         return res.send(results);
+//     });
+// });
+
+app.post('/login', (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    console.log(username + " " + password);
+    connection.query(`select username from user_list where username = ? and password = ?`, [username, password], (error, results) => {
         if (error) {
-            console.log('select * from user_list');
+            console.log('select username');
             console.log(error);
             return;
         }
-        return res.send(results);
+        console.log(results[0])
+        if (results[0].username == username) {
+            return res.status(200).send('로그인 성공')
+        }
+        else
+        {
+            return res.status(500).send('안되지롱')
+        }
     });
 });
 
