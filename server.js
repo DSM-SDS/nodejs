@@ -238,7 +238,7 @@ app.get('/get_data', (req, res) => {
             console.log(error);
             return res.status(500).send('안되지롱')
         }
-        return res.status(200)
+        return res.status(200).send('Success')
     });
 });
 
