@@ -83,8 +83,7 @@ app.post('/login', (req, res) => {
             let refreshToken = generateRefreshToken(results[0].username);
             res.json({ accessToken, refreshToken });
         }
-        else
-        {
+        else {
             return res.status(500).send('안되지롱')
         }
     });
@@ -115,8 +114,7 @@ app.post('/signin', (req, res) => {
                 return res.status(200).send('회원가입 성공')
             });
         }
-        else
-        {
+        else {
             return res.status(500).send('중복된 아이디입니다')
         }
     });
@@ -124,10 +122,11 @@ app.post('/signin', (req, res) => {
 
 app.post('/report', authenticateAccessToken, (req, res) => {
     let username = req.user.id;
+    let title = req.body.title;
     let detail = req.body.detail;
     let time = req.body.time;
     let date = req.body.date;
-    console.log(username + " " + detail + " " + time + "" + date);
+    console.log(username + " " + title + " " + detail + " " + time + "" + date);
     connection.query(`select apt_name,hosu from user_list where username = ?`, [username], (error, results) => {
         if (error) {
             console.log('select username');
@@ -135,7 +134,7 @@ app.post('/report', authenticateAccessToken, (req, res) => {
             return;
         }
         console.log(results);
-        connection.query(`INSERT INTO report (username, apt_name, hosu, detail, time, date, is_accepted) VALUES (?,?,?,?,?,?,?)`, [username, results[0].apt_name, results[0].hosu ,detail, time, date, "NO"], (error, results) => {
+        connection.query(`INSERT INTO report (username, apt_name, hosu, title, detail, time, date, c) VALUES (?,?,?,?,?,?,?,?)`, [username, results[0].apt_name, results[0].hosu, title, detail, time, date, "NO"], (error, results) => {
             if (error) {
                 console.log('INSERT error');
                 console.log(error);
@@ -143,6 +142,28 @@ app.post('/report', authenticateAccessToken, (req, res) => {
             }
             return res.status(200).send('신고 접수')
         });
+    });
+});
+
+app.post('/report_list', authenticateAccessToken, (req, res) => {
+    let username = req.user.id;
+    console.log(username);
+    connection.query(`select role, apt_name from user_list where username = ?`, [username], (error, results) => {
+        if (error) {
+            console.log('select username');
+            console.log(error);
+            return;
+        }
+        if (results[0].role = "Admin") {
+            connection.query(`select title, name, hosu, report, from report where apt_name = ?`, [results[0].apt_name], (error, results) => {
+                if (error) {
+                    console.log('INSERT error');
+                    console.log(error);
+                    return res.status(500).send('안되지롱')
+                }
+                return res.json(results);
+            });
+        }
     });
 });
 
