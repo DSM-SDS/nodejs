@@ -198,6 +198,34 @@ app.post('/report_view', authenticateAccessToken, (req, res) => {
     });
 });
 
+app.post('/accept_report', authenticateAccessToken, (req, res) => {
+    let username = req.user.id;
+    let report_id = req.body.report_id;
+    let is_accepted = req.body.is_accepted;
+    console.log(username);
+    connection.query(`select role, apt_name from user_list where username = ?`, [username], (error, results) => {
+        if (error) {
+            console.log('select username');
+            console.log(error);
+            return;
+        }
+        if (results[0].role == "Admin") {
+            connection.query(`UPDATE report SET is_accepted = ? where apt_name = ? and report_id = ?`, [is_accepted, results[0].apt_name, report_id], (error, results) => {
+                if (error) {
+                    console.log('select error');
+                    console.log(error);
+                    return res.status(500).send('안되지롱')
+                }
+                return res.status(200).send('성공')
+            });
+        }
+        else
+        {
+            return res.status(500).send('해서 뭐하게')
+        }
+    });
+});
+
 const port = 80;
 app.listen(port, () => {
     console.log(`express server running on port ${port}`);
