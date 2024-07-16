@@ -104,7 +104,7 @@ app.post('/signin', (req, res) => {
             return;
         }
         console.log(results[0])
-        if (results[0].username != username) {
+        if (results[0] != "") {
             connection.query(`INSERT INTO user_list (username, password, name, hosu, apt_name, role) VALUES (?,?,?,?,?,?)`, [username, password, name, hosu, apt_name, role], (error, results) => {
                 if (error) {
                     console.log('INSERT error');
@@ -161,7 +161,7 @@ app.post('/report_list', authenticateAccessToken, (req, res) => {
                     console.log(error);
                     return res.status(500).send('안되지롱')
                 }
-                return res.json(results);
+                return res.json(results[0]);
             });
         }
     });
