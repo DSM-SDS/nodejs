@@ -39,7 +39,7 @@ app.post('/signin', (req, res) => {
     let apt_name = req.body.apt_name;
     let role = req.body.role;
     console.log(username + " " + password + " " + name + " " + hosu + " " + apt_name + " " + role);
-    connection.query(`select username from where username = ?`, [username], (error, results) => {
+    connection.query(`select username from user_list where username = ?`, [username], (error, results) => {
         if (error) {
             console.log('select username');
             console.log(error);
