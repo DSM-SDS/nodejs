@@ -127,7 +127,7 @@ app.post('/report', authenticateAccessToken, (req, res) => {
     let detail = req.body.detail;
     let time = req.body.time;
     let date = req.body.date;
-    console.log(username + " " + hosu + " " + detail + " " + time + "" + date);
+    console.log(username + " " + detail + " " + time + "" + date);
     connection.query(`select apt_name,hosu from user_list where username = ?`, [username], (error, results) => {
         if (error) {
             console.log('select username');
